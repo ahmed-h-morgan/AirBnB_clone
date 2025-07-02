@@ -2,6 +2,7 @@
 """
 the Base model
 """
+import uuid
 
 
 class BaseModel:
@@ -10,5 +11,7 @@ class BaseModel:
     that defines all common attributes/methods
     for other classes:
     """
-    pass
+    def __init__(self):
+        self.id = str(uuid.uuid4())
+        
 
