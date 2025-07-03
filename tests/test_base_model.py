@@ -60,5 +60,3 @@ class TestBaseModel(unittest.TestCase):
             expected_str = f"[BaseModel] ({fixed_uuid}) {expected_dict}"
 
             self.assertEqual(str(obj), expected_str)
-
-    
