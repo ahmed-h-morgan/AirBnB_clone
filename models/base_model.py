@@ -4,6 +4,7 @@ the Base model
 """
 import uuid
 from datetime import datetime
+from models import storage
 
 
 class BaseModel:
@@ -17,6 +18,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
         else:
             for key, value in kwargs.items():
                 if key == "__class__":
@@ -30,11 +32,10 @@ class BaseModel:
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
+        storage.save()
         self.updated_at = datetime.now()
 
     def to_dict(self):
-        # now = datetime.now()
-        # iso_string = now.isoformat()
         self.__dict__["__class__"] = self.__class__.__name__
         self.__dict__["created_at"] = datetime.isoformat(self.created_at)
         self.__dict__["updated_at"] = datetime.isoformat(self.updated_at)

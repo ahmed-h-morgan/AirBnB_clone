@@ -1,0 +1,49 @@
+#!/usr/bin/python3
+"""
+the File Storage model
+"""
+import json
+# from ..base_model import BaseModel
+
+
+class FileStorage:
+    """
+    save to and reload data from json files
+    """
+    __objects = {}
+    __file_path = "file.json"
+
+    
+    def all(self):
+        """
+        """
+        return FileStorage.__objects
+        # OR for more flexability if needed later
+        # return self.__class__.__objects
+    
+    def new(self, obj):
+        """
+        """
+        from ..base_model import BaseModel  # Lazy import
+        key = f"{obj.__class__.__name__}.{obj.id}"
+        FileStorage.__objects[key] = obj
+
+    def save(self):
+        """
+        """
+        with open(FileStorage.__file_path, 'w') as file:
+            json.dump({key: value.to_dict() for key, value in FileStorage.__objects.items()}, file)
+
+    def reload(self):
+        """
+        """
+        try:
+            with open(FileStorage.__file_path, 'r') as file:
+                from ..base_model import BaseModel  # Lazy import
+                objects = json.load(file)
+                for key, value in objects.items():
+                    class_name = value["__class__"]
+                    FileStorage.__objects[key] = eval(class_name)(**value)
+
+        except FileNotFoundError:
+            pass
