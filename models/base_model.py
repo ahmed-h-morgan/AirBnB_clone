@@ -36,7 +36,24 @@ class BaseModel:
         self.updated_at = datetime.now()
 
     def to_dict(self):
-        self.__dict__["__class__"] = self.__class__.__name__
-        self.__dict__["created_at"] = self.created_at.isoformat()
-        self.__dict__["updated_at"] = self.updated_at.isoformat()
-        return self.__dict__
+        # self.__dict__["__class__"] = self.__class__.__name__
+        # self.__dict__["created_at"] = self.created_at.isoformat()
+        # self.__dict__["updated_at"] = self.updated_at.isoformat()
+        # return self.__dict__
+
+        new_dict = self.__dict__.copy()
+        new_dict["__class__"] = self.__class__.__name__
+        
+        # Handle created_at
+        if isinstance(self.created_at, datetime):
+            new_dict["created_at"] = self.created_at.isoformat()
+        else:
+            new_dict["created_at"] = self.created_at  # Already a string
+        
+        # Handle updated_at
+        if isinstance(self.updated_at, datetime):
+            new_dict["updated_at"] = self.updated_at.isoformat()
+        else:
+            new_dict["updated_at"] = self.updated_at  # Already a string
+        
+        return new_dict
