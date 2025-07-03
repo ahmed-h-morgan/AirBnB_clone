@@ -9,7 +9,7 @@ from datetime import datetime
 from unittest.mock import patch
 
 
-class TestBase(unittest.TestCase):
+class TestBaseModel(unittest.TestCase):
     """
     test base class
     """
