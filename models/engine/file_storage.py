@@ -4,7 +4,6 @@ the File Storage model
 """
 import json
 from datetime import datetime
-# from ..base_model import BaseModel
 
 
 class FileStorage:
