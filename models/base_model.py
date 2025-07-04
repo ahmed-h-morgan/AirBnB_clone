@@ -25,7 +25,11 @@ class BaseModel:
                     continue
                 elif key in ("created_at", "updated_at"):
                     if isinstance(value, str):
-                        setattr(self, key, datetime.fromisoformat(value))
+                        if key == "created_at":
+                            setattr(self, key, datetime.strptime(value["created_at"], "%Y-%m-%dT%H:%M:%S.%f"))
+                        elif key == "updated_at":
+                            setattr(self, key, datetime.strptime(value["updated_at"], "%Y-%m-%dT%H:%M:%S.%f"))
+                        # setattr(self, key, datetime.fromisoformat(value))
                     else:
                         setattr(self, key, value)
                 else:
@@ -35,8 +39,8 @@ class BaseModel:
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        storage.save()
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         # self.__dict__["__class__"] = self.__class__.__name__
@@ -49,13 +53,13 @@ class BaseModel:
         
         # Handle created_at
         if isinstance(self.created_at, datetime):
-            new_dict["created_at"] = self.created_at.isoformat()
+            new_dict["created_at"] = self.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
         else:
             new_dict["created_at"] = self.created_at  # Already a string
         
         # Handle updated_at
         if isinstance(self.updated_at, datetime):
-            new_dict["updated_at"] = self.updated_at.isoformat()
+            new_dict["updated_at"] = self.updated_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
         else:
             new_dict["updated_at"] = self.updated_at  # Already a string
         
