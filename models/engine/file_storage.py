@@ -3,6 +3,7 @@
 the File Storage model
 """
 import json
+from datetime import datetime
 # from ..base_model import BaseModel
 
 
@@ -43,6 +44,8 @@ class FileStorage:
                 objects = json.load(file)
                 for key, value in objects.items():
                     class_name = value["__class__"]
+                    value["created_at"] = datetime.strptime(value["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+                    value["updated_at"] = datetime.strptime(value["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
                     FileStorage.__objects[key] = eval(class_name)(**value)
 
         except FileNotFoundError:
