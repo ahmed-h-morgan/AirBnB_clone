@@ -25,11 +25,7 @@ class BaseModel:
                     continue
                 elif key in ("created_at", "updated_at"):
                     if isinstance(value, str):
-                        if key == "created_at":
-                            setattr(self, key, datetime.strptime(value["created_at"], "%Y-%m-%dT%H:%M:%S.%f"))
-                        elif key == "updated_at":
-                            setattr(self, key, datetime.strptime(value["updated_at"], "%Y-%m-%dT%H:%M:%S.%f"))
-                        # setattr(self, key, datetime.fromisoformat(value))
+                        setattr(self, key, datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
                     else:
                         setattr(self, key, value)
                 else:
