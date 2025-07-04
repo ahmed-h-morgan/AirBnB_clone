@@ -24,7 +24,10 @@ class BaseModel:
                 if key == "__class__":
                     continue
                 elif key in ("created_at", "updated_at"):
-                    setattr(self, key, datetime.fromisoformat(value))
+                    if isinstance(value, str):
+                        setattr(self, key, datetime.fromisoformat(value))
+                    else:
+                        setattr(self, key, value)
                 else:
                     setattr(self, key, value)
 
