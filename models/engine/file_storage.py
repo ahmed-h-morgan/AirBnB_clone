@@ -17,6 +17,7 @@ class FileStorage:
     
     def all(self):
         """
+        return all objects of the class
         """
         return FileStorage.__objects
         # OR for more flexability if needed later
@@ -24,6 +25,7 @@ class FileStorage:
     
     def new(self, obj):
         """
+        add new object with unique id
         """
         from ..base_model import BaseModel  # Lazy import
         key = f"{obj.__class__.__name__}.{obj.id}"
@@ -31,12 +33,14 @@ class FileStorage:
 
     def save(self):
         """
+        serielize objects and add them to Json file
         """
         with open(FileStorage.__file_path, 'w') as file:
             json.dump({key: value.to_dict() for key, value in FileStorage.__objects.items()}, file)
 
     def reload(self):
         """
+        deserielze  object back to objects
         """
         try:
             with open(FileStorage.__file_path, 'r') as file:
