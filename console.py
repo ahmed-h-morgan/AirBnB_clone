@@ -63,8 +63,14 @@ class HBNBCommand(cmd.Cmd):
         and prints the id
         """
         args = self._split_line(line)
-        if not args or not self._validate_class_name(args[0]):
-            return
+
+        # if not args or not self._validate_class_name(args[0]):
+        #     return
+
+        if args:
+            if not self._validate_class_name(args[0]):
+                return
+
         new_instance = self.valid_classes[args[0]]()
         print(new_instance.id)
         new_instance.save()
