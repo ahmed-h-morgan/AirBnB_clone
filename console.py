@@ -67,6 +67,7 @@ class HBNBCommand(cmd.Cmd):
         # if not args or not self._validate_class_name(args[0]):
         #     return
 
+
         if args:
             if not self._validate_class_name(args[0]):
                 return
