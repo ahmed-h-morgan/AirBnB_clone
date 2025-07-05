@@ -2,7 +2,10 @@
 """
 the Console model
 """
-import cmd, sys
+import cmd
+from models.base_model import BaseModel
+from models.engine.file_storage import FileStorage
+
 
 
 class HBNBCommand(cmd.Cmd):
@@ -27,9 +30,24 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Do nothing when an empty line is entered"""
         pass
+    
+    def do_create(self):
+        pass
 
+    def do_show(self):
+        pass
 
+    def do_destroy(self):
+        pass
 
+    def do_all(self):
+        pass
+
+    def do_update(self):
+        pass
+
+    def default(self, line):
+        pass
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
