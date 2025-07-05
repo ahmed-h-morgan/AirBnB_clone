@@ -47,7 +47,11 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def default(self, line):
-        pass
+        """
+        """
+        accepted_classes = {
+            "BaseModel": BaseModel,
+        }
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
