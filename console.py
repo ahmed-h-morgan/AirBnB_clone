@@ -67,10 +67,17 @@ class HBNBCommand(cmd.Cmd):
         # if not args or not self._validate_class_name(args[0]):
         #     return
 
+        # if args:
+        if not args:
+            print("** class name missing **")
+            return
+        elif args[0] not in self.valid_classes:
+            print("** class doesn't exist **")
+            return
 
-        if args:
-            if not self._validate_class_name(args[0]):
-                return
+        # if args:
+        #     if not self._validate_class_name(args[0]):
+        #         return
 
         new_instance = self.valid_classes[args[0]]()
         print(new_instance.id)
