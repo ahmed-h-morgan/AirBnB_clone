@@ -43,16 +43,16 @@ class HBNBCommand(cmd.Cmd):
             print(f"Splitting line error: {e}")
             return None
     
-    def _validate_class_name(self, class_name):
-        """ A helper method to validate class name """
-        if not class_name:
-            print("** class name missing **")
-            return False
-        elif class_name not in self.valid_classes:
-            print("** class doesn't exist **")
-            return False
-        else:
-            return True
+    # def _validate_class_name(self, class_name):
+    #     """ A helper method to validate class name """
+    #     if not class_name:
+    #         print("** class name missing **")
+    #         return False
+    #     elif class_name not in self.valid_classes:
+    #         print("** class doesn't exist **")
+    #         return False
+    #     else:
+    #         return True
             
 
     
@@ -64,20 +64,12 @@ class HBNBCommand(cmd.Cmd):
         """
         args = self._split_line(line)
 
-        # if not args or not self._validate_class_name(args[0]):
-        #     return
-
-        # if args:
         if not args:
             print("** class name missing **")
             return
         elif args[0] not in self.valid_classes:
             print("** class doesn't exist **")
             return
-
-        # if args:
-        #     if not self._validate_class_name(args[0]):
-        #         return
 
         new_instance = self.valid_classes[args[0]]()
         print(new_instance.id)
