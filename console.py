@@ -81,8 +81,16 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self):
         pass
 
-    def do_all(self):
-        pass
+    def do_all(self, line):
+        """
+         Prints all string representation of all instances
+        """
+        args = self._split_line(line)
+        if args[0] not in self.valid_classes:
+            print("** class doesn't exist **")
+            return
+        else:
+            pass
 
     def do_update(self):
         pass
