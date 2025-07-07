@@ -21,6 +21,11 @@ class HBNBCommand(cmd.Cmd):
     #     """ Give me more info about method """
     #     return super().do_help(arg)
 
+    # def __init__(self):
+    #     self.storage = FileStorage()
+    #     self.storage.reload()
+
+
     def do_quit(self,arg):
         """ Quit command to exit the program """
         return True
@@ -86,19 +91,40 @@ class HBNBCommand(cmd.Cmd):
          Prints all string representation of all instances
         """
         args = self._split_line(line)
+        storage = FileStorage()
+
         print(args)
-        if not args:
-        # if len(args) == 0:
-            for key in self.valid_classes:
-                all_instance = self.valid_classes[key]()
-                all_instance.__str__()                
-        elif args[0] not in self.valid_classes:
-            print("** class doesn't exist **")
+        stored_objects = storage.all()
+        if not stored_objects:
+            print("[]")
             return
-        elif args[0] in self.valid_classes:
-            new_instance = self.valid_classes[args[0]]()
-            # print(self.valid_classes[args[0]]())
-            new_instance.__str__()
+
+        if len(args) == 0:
+            obj_list = []
+            for obj in stored_objects:
+                obj_list.append(str(obj))
+            print(obj_list)
+        elif len(args) >= 1:
+            if args[0] not in self.valid_classes:
+                print("** class doesn't exist **")
+                return
+            else:
+                named_obj_list = []
+                for obj in stored_objects[self.valid_classes[args[0]]]:
+                    named_obj_list.append(str(obj))
+                print(named_obj_list)
+        # if not args:
+        # # if len(args) == 0:
+        #     for key in self.valid_classes:
+        #         all_instance = self.valid_classes[key]()
+        #         all_instance.__str__()                
+        # elif args[0] not in self.valid_classes:
+        #     print("** class doesn't exist **")
+        #     return
+        # elif args[0] in self.valid_classes:
+        #     new_instance = self.valid_classes[args[0]]()
+        #     # print(self.valid_classes[args[0]]())
+        #     new_instance.__str__()
         # else:
             #     for key in self.valid_classes:
             #         all_instance = self.valid_classes[key]()
