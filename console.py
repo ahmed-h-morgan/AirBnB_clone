@@ -86,11 +86,23 @@ class HBNBCommand(cmd.Cmd):
          Prints all string representation of all instances
         """
         args = self._split_line(line)
-        if args[0] not in self.valid_classes:
+        print(args)
+        if not args:
+        # if len(args) == 0:
+            for key in self.valid_classes:
+                all_instance = self.valid_classes[key]()
+                all_instance.__str__()                
+        elif args[0] not in self.valid_classes:
             print("** class doesn't exist **")
             return
-        else:
-            pass
+        elif args[0] in self.valid_classes:
+            new_instance = self.valid_classes[args[0]]()
+            # print(self.valid_classes[args[0]]())
+            new_instance.__str__()
+        # else:
+            #     for key in self.valid_classes:
+            #         all_instance = self.valid_classes[key]()
+            #         all_instance.__str__()
 
     def do_update(self):
         pass
