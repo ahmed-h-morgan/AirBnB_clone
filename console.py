@@ -110,9 +110,11 @@ class HBNBCommand(cmd.Cmd):
                 return
             elif args[0] in self.valid_classes:
                 named_obj_list = []
-                for obj in stored_objects:
-                    getattr(stored_objects, args[0])
-                    named_obj_list.append(str(obj))
+                for key, value in stored_objects.items():
+                    x = key.split('.')
+                    if x[0] == args[0]:
+                    # getattr(stored_objects, args[0])
+                        named_obj_list.append(str(value))
                 print(named_obj_list)
         # if not args:
         # # if len(args) == 0:
