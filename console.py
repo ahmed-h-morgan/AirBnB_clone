@@ -103,6 +103,7 @@ class HBNBCommand(cmd.Cmd):
             obj_list = []
             for obj in stored_objects:
                 obj_list.append(str(obj))
+            print(obj_list)
         elif len(args) >= 1:
             if args[0] not in self.valid_classes:
                 print("** class doesn't exist **")
