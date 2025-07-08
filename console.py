@@ -102,7 +102,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
             elif len(args) == 1:
-                print(" ** instance id missing **")
+                print("** instance id missing **")
                 return
             else:
                 instance_id = ".".join([args[0], args[1]])
