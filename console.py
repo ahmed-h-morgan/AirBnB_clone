@@ -80,8 +80,49 @@ class HBNBCommand(cmd.Cmd):
         print(new_instance.id)
         new_instance.save()
 
-    def do_show(self):
-        pass
+    def do_show(self, line):
+        """
+         Prints all string representation of specific instance
+        """
+        args = self._split_line(line)
+        storage = FileStorage()
+
+        print(args)
+        stored_objects = storage.all()
+        if not stored_objects:
+            print("[]")
+            return
+        
+        if len(args) == 0:
+            print ("** class name missing **")
+            return
+
+        elif len(args) >= 1:
+            if args[0] not in self.valid_classes:
+                print("** class doesn't exist **")
+                return
+            elif len(args) == 1:
+                print(" ** instance id missing **")
+                return
+            else:
+                instance_id = ".".join([args[0], args[1]])
+                if instance_id not in stored_objects:
+                    print("** no instance found **")
+                    return
+                else:
+                    print(stored_objects.get(instance_id))
+            # elif args[0] in self.valid_classes:
+            #     for key, value in stored_objects.items():
+            #         x = key.split('.')
+            #         if x[0] != args[0]:
+            #             print("** class doesn't exist **")
+        # elif len(args) == 2:
+        #         for key, value in stored_objects.items():
+        #             x = key.split('.')
+        #             if x[1] != args[1]:
+        #                 print("** class doesn't exist **")            
+
+
 
     def do_destroy(self):
         pass
@@ -115,22 +156,6 @@ class HBNBCommand(cmd.Cmd):
                     if x[0] == args[0]:
                         named_obj_list.append(str(value))
                 print(named_obj_list)
-        # if not args:
-        # # if len(args) == 0:
-        #     for key in self.valid_classes:
-        #         all_instance = self.valid_classes[key]()
-        #         all_instance.__str__()                
-        # elif args[0] not in self.valid_classes:
-        #     print("** class doesn't exist **")
-        #     return
-        # elif args[0] in self.valid_classes:
-        #     new_instance = self.valid_classes[args[0]]()
-        #     # print(self.valid_classes[args[0]]())
-        #     new_instance.__str__()
-        # else:
-            #     for key in self.valid_classes:
-            #         all_instance = self.valid_classes[key]()
-            #         all_instance.__str__()
 
     def do_update(self):
         pass
