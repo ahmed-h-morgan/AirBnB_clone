@@ -47,20 +47,8 @@ class HBNBCommand(cmd.Cmd):
         except ValueError as e:
             print(f"Splitting line error: {e}")
             return None
-    
-    # def _validate_class_name(self, class_name):
-    #     """ A helper method to validate class name """
-    #     if not class_name:
-    #         print("** class name missing **")
-    #         return False
-    #     elif class_name not in self.valid_classes:
-    #         print("** class doesn't exist **")
-    #         return False
-    #     else:
-    #         return True
-            
 
-    
+
     def do_create(self, line):
         """
         Creates a new instance of the class
@@ -79,6 +67,7 @@ class HBNBCommand(cmd.Cmd):
         new_instance = self.valid_classes[args[0]]()
         print(new_instance.id)
         new_instance.save()
+
 
     def do_show(self, line):
         """
@@ -111,6 +100,7 @@ class HBNBCommand(cmd.Cmd):
                     return
                 else:
                     print(stored_objects.get(instance_id))
+
 
     def do_destroy(self, line):
         """
@@ -176,16 +166,11 @@ class HBNBCommand(cmd.Cmd):
                         named_obj_list.append(str(value))
                 print(named_obj_list)
 
-    def do_update(self):
+    def do_update(self, line):
         pass
 
     def default(self, line):
         pass
-        # """
-        # """
-        # accepted_classes = {
-        #     "BaseModel": BaseModel,
-        # }
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
