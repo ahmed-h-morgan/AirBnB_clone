@@ -5,6 +5,7 @@ the Console model
 import cmd
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+import shlex
 
 
 
@@ -167,7 +168,51 @@ class HBNBCommand(cmd.Cmd):
                 print(named_obj_list)
 
     def do_update(self, line):
-        pass
+        """
+        Update an instance based on the class name and id
+        """
+        args = shlex.split(line)
+        storage = FileStorage()
+        base = BaseModel()
+
+        print(args)
+        stored_objects = storage.all()
+        if not stored_objects:
+            print("[]")
+            return
+        if len(args) == 0:
+            print ("** class name missing **")
+            return
+
+        elif len(args) >= 1:
+            if args[0] not in self.valid_classes:
+                print("** class doesn't exist **")
+                return
+            elif len(args) == 1:
+                print("** instance id missing **")
+                return
+            elif args[1]:
+                stor_key = f"{args[0]}.{args[1]}"
+                if stor_key not in stored_objects:
+                    print("** no instance found **")
+                    return
+            elif len(args) == 2:
+                print("** attribute name missing **")
+                return
+            elif len(args) == 3:
+                print("** value missing **")
+                return
+            else:
+                storage_key = f"{args[0]}.{args[1]}"
+                passed_value = args[3]
+
+                if int(passed_value):
+                    passed_value = int(passed_value)
+                elif float(passed_value):
+                    passed_value = float(passed_value)
+                elif str(passed_value):
+                    passed_value = str(passed_value)
+
 
     def default(self, line):
         pass
