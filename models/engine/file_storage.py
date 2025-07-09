@@ -27,6 +27,8 @@ class FileStorage:
         add new object with unique id
         """
         from ..base_model import BaseModel  # Lazy import
+        from ..user import User
+
         key = f"{obj.__class__.__name__}.{obj.id}"
         FileStorage.__objects[key] = obj
 
@@ -44,6 +46,8 @@ class FileStorage:
         try:
             with open(FileStorage.__file_path, 'r') as file:
                 from ..base_model import BaseModel  # Lazy import
+                from ..user import User
+
                 objects = json.load(file)
                 for key, value in objects.items():
                     class_name = value["__class__"]

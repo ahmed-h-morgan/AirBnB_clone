@@ -4,6 +4,7 @@ the Console model
 """
 import cmd
 from models.base_model import BaseModel
+from models.user import User
 from models.engine.file_storage import FileStorage
 import shlex
 
@@ -17,6 +18,7 @@ class HBNBCommand(cmd.Cmd):
 
     valid_classes = {
         "BaseModel": BaseModel,
+        "User": User,
         }
     # def do_help(self, arg):
     #     """ Give me more info about method """
