@@ -178,39 +178,75 @@ class HBNBCommand(cmd.Cmd):
         if not stored_objects:
             print("[]")
             return
+
         if len(args) == 0:
-            print ("** class name missing **")
+            print("** class name missing **")
+            return
+        if args[0] not in self.valid_classes:
+            print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+        
+        storage_key = f"{args[0]}.{args[1]}"
+        if storage_key not in stored_objects:
+            print("** no instance found **")
+            return
+        if len(args) < 3:
+            print("** attribute name missing **")
+            return
+        if len(args) < 4:
+            print("** value missing **")
             return
 
-        elif len(args) >= 1:
-            if args[0] not in self.valid_classes:
-                print("** class doesn't exist **")
-                return
-            elif len(args) == 1:
-                print("** instance id missing **")
-                return
-            elif args[1]:
-                stor_key = f"{args[0]}.{args[1]}"
-                if stor_key not in stored_objects:
-                    print("** no instance found **")
-                    return
-            elif len(args) == 2:
-                print("** attribute name missing **")
-                return
-            elif len(args) == 3:
-                print("** value missing **")
-                return
-            else:
-                storage_key = f"{args[0]}.{args[1]}"
-                passed_value = args[3]
+        # Handle protected attributes
+        if args[2] in ['id', 'created_at', 'updated_at']:
+            print("** cannot update protected attribute **")
+            return
 
-                try:
-                    passed_value = int(passed_value)
-                except ValueError:
-                    try:
-                        passed_value = float(passed_value)
-                    except ValueError:
-                        passed_value = passed_value.strip('"\'')
+        # Process value
+        passed_value = args[3].strip('"\'')
+        try:
+            passed_value = int(passed_value)
+        except ValueError:
+            try:
+                passed_value = float(passed_value)
+            except ValueError:
+                pass  # Keep as string
+        # if len(args) == 0:
+        #     print ("** class name missing **")
+        #     return
+
+        # elif len(args) >= 1:
+        #     if args[0] not in self.valid_classes:
+        #         print("** class doesn't exist **")
+        #         return
+        #     elif len(args) == 1:
+        #         print("** instance id missing **")
+        #         return
+        #     elif args[1]:
+        #         stor_key = f"{args[0]}.{args[1]}"
+        #         if stor_key not in stored_objects:
+        #             print("** no instance found **")
+        #             return
+        #     elif len(args) == 2:
+        #         print("** attribute name missing **")
+        #         return
+        #     elif len(args) == 3:
+        #         print("** value missing **")
+        #         return
+        #     else:
+        #         storage_key = f"{args[0]}.{args[1]}"
+        #         passed_value = args[3]
+
+        #         try:
+        #             passed_value = int(passed_value)
+        #         except ValueError:
+        #             try:
+        #                 passed_value = float(passed_value)
+        #             except ValueError:
+        #                 passed_value = passed_value.strip('"\'')
 
                 # if int(passed_value):
                 #     passed_value = int(passed_value)
