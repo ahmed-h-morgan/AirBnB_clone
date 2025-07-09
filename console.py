@@ -173,9 +173,7 @@ class HBNBCommand(cmd.Cmd):
         """
         args = shlex.split(line)
         storage = FileStorage()
-        base = BaseModel()
 
-        print(args)
         stored_objects = storage.all()
         if not stored_objects:
             print("[]")
@@ -206,12 +204,24 @@ class HBNBCommand(cmd.Cmd):
                 storage_key = f"{args[0]}.{args[1]}"
                 passed_value = args[3]
 
-                if int(passed_value):
+                try:
                     passed_value = int(passed_value)
-                elif float(passed_value):
-                    passed_value = float(passed_value)
-                elif str(passed_value):
-                    passed_value = str(passed_value)
+                except ValueError:
+                    try:
+                        passed_value = float(passed_value)
+                    except ValueError:
+                        passed_value = passed_value.strip('"\'')
+
+                # if int(passed_value):
+                #     passed_value = int(passed_value)
+                # elif float(passed_value):
+                #     passed_value = float(passed_value)
+                # elif str(passed_value):
+                #     passed_value = str(passed_value)
+                
+                instance = stored_objects[storage_key]
+                setattr(instance, args[2], passed_value)
+                instance.save()
 
 
     def default(self, line):
