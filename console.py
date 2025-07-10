@@ -227,47 +227,7 @@ class HBNBCommand(cmd.Cmd):
                 passed_value = float(passed_value)
             except ValueError:
                 pass  # Keep as string
-        # if len(args) == 0:
-        #     print ("** class name missing **")
-        #     return
 
-        # elif len(args) >= 1:
-        #     if args[0] not in self.valid_classes:
-        #         print("** class doesn't exist **")
-        #         return
-        #     elif len(args) == 1:
-        #         print("** instance id missing **")
-        #         return
-        #     elif args[1]:
-        #         stor_key = f"{args[0]}.{args[1]}"
-        #         if stor_key not in stored_objects:
-        #             print("** no instance found **")
-        #             return
-        #     elif len(args) == 2:
-        #         print("** attribute name missing **")
-        #         return
-        #     elif len(args) == 3:
-        #         print("** value missing **")
-        #         return
-        #     else:
-        #         storage_key = f"{args[0]}.{args[1]}"
-        #         passed_value = args[3]
-
-        #         try:
-        #             passed_value = int(passed_value)
-        #         except ValueError:
-        #             try:
-        #                 passed_value = float(passed_value)
-        #             except ValueError:
-        #                 passed_value = passed_value.strip('"\'')
-
-                # if int(passed_value):
-                #     passed_value = int(passed_value)
-                # elif float(passed_value):
-                #     passed_value = float(passed_value)
-                # elif str(passed_value):
-                #     passed_value = str(passed_value)
-                
                 instance = stored_objects[storage_key]
                 setattr(instance, args[2], passed_value)
                 instance.save()
@@ -284,6 +244,16 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** class doesn't exist **")
                 return
+        elif '.' in line and line.endswith('.count()'):
+            class_name = line.split('.')[0]
+            if class_name in self.valid_classes:
+                storage = FileStorage()
+                stored_objects = storage.all()
+                obj_count = 0
+                for key in stored_objects:
+                    if key.startswith(class_name + '.'):
+                        obj_count += 1
+                print(obj_count) 
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
