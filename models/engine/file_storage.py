@@ -28,6 +28,12 @@ class FileStorage:
         """
         from ..base_model import BaseModel  # Lazy import
         from ..user import User
+        from ..amenity import Amenity
+        from ..city import City
+        from ..place import Place
+        from ..review import Review
+        from ..state import State
+
 
         key = f"{obj.__class__.__name__}.{obj.id}"
         FileStorage.__objects[key] = obj
@@ -47,6 +53,11 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as file:
                 from ..base_model import BaseModel  # Lazy import
                 from ..user import User
+                from ..amenity import Amenity
+                from ..city import City
+                from ..place import Place
+                from ..review import Review
+                from ..state import State
 
                 objects = json.load(file)
                 for key, value in objects.items():
