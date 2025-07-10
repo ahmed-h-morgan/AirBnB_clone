@@ -274,7 +274,16 @@ class HBNBCommand(cmd.Cmd):
 
 
     def default(self, line):
-        pass
+        """
+        
+        """
+        if '.' in line and line.endswith('.all()'):
+            class_name = line.split('.')[0]
+            if class_name in self.valid_classes:
+                return self.do_all(class_name)
+            else:
+                print("** class doesn't exist **")
+                return
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
