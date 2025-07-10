@@ -91,9 +91,9 @@ class HBNBCommand(cmd.Cmd):
 
 
         stored_objects = storage.all()
-        if not stored_objects:
-            print("[]")
-            return
+        # if not stored_objects:
+        #     print("[]")
+        #     return
         
         if len(args) == 0:
             print ("** class name missing **")
