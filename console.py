@@ -89,7 +89,7 @@ class HBNBCommand(cmd.Cmd):
         args = self._split_line(line)
         storage = FileStorage()
 
-        print(args)
+
         stored_objects = storage.all()
         if not stored_objects:
             print("[]")
@@ -103,16 +103,17 @@ class HBNBCommand(cmd.Cmd):
             if args[0] not in self.valid_classes:
                 print("** class doesn't exist **")
                 return
-            elif len(args) == 1:
+            elif len(args) < 2:
                 print("** instance id missing **")
                 return
             else:
-                instance_id = ".".join([args[0], args[1]])
-                if instance_id not in stored_objects:
+                instance_key = f"{args[0]}.{args[1]}"
+                instance = stored_objects.get(instance_key)
+                if not instance:
                     print("** no instance found **")
                     return
                 else:
-                    print(stored_objects.get(instance_id))
+                    print(instance)
 
 
     def do_destroy(self, line):
