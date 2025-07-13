@@ -309,10 +309,16 @@ class HBNBCommand(cmd.Cmd):
                 id_value = id_value.strip('"\'')
                 
                 if class_name in self.valid_classes:
-                    if id_value:
-                        return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
-                    else:
+                    if not id_value:
+                        # return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
                         print("** instance id missing **")
+                    elif not attribute_name:
+                        print("** attribute name missing **")
+                    elif not attribute_value:
+                        print("** value missing **")
+                    else:
+                        return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
+                        # print("** instance id missing **")
                 else:
                     print("** class doesn't exist **")
             except Exception:
