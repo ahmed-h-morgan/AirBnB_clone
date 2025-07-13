@@ -294,7 +294,29 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     print("** class doesn't exist **")
             except Exception:
-                print("*** Unknown syntax: {}".format(line))    
+                print("*** Unknown syntax: {}".format(line))
+
+        elif '.' in line and '.update(' in line and line.endswith(')'):
+            try:
+                # Split into parts
+                class_part, id_part = line.split('.update(')
+                class_name = class_part.strip()
+                id_value = id_part[:-3].strip()  # Remove trailing )
+                attribute_name = id_part[:-2].strip()
+                attribute_value = id_part[:-1].strip()
+                
+                # Remove surrounding quotes if present
+                id_value = id_value.strip('"\'')
+                
+                if class_name in self.valid_classes:
+                    if id_value:
+                        return self.do_destroy(f"{class_name} {id_value} {attribute_name} {attribute_value}")
+                    else:
+                        print("** instance id missing **")
+                else:
+                    print("** class doesn't exist **")
+            except Exception:
+                print("*** Unknown syntax: {}".format(line))  
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
