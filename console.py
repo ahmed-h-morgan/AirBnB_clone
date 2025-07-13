@@ -310,7 +310,7 @@ class HBNBCommand(cmd.Cmd):
                 
                 if class_name in self.valid_classes:
                     if id_value:
-                        return self.do_destroy(f"{class_name}, {id_value}, {attribute_name}, {attribute_value}")
+                        return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
                     else:
                         print("** instance id missing **")
                 else:
