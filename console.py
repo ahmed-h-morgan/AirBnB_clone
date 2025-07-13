@@ -255,6 +255,7 @@ class HBNBCommand(cmd.Cmd):
                     if key.startswith(class_name + '.'):
                         obj_count += 1
                 print(obj_count)
+
         elif '.' in line and '.show(' in line and line.endswith(')'):
             try:
                 # Split into parts
@@ -273,7 +274,27 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     print("** class doesn't exist **")
             except Exception:
-                print("*** Unknown syntax: {}".format(line))           
+                print("*** Unknown syntax: {}".format(line))
+
+        elif '.' in line and '.destroy(' in line and line.endswith(')'):
+            try:
+                # Split into parts
+                class_part, id_part = line.split('.destroy(')
+                class_name = class_part.strip()
+                id_value = id_part[:-1].strip()  # Remove trailing )
+                
+                # Remove surrounding quotes if present
+                id_value = id_value.strip('"\'')
+                
+                if class_name in self.valid_classes:
+                    if id_value:
+                        return self.do_destroy(f"{class_name} {id_value}")
+                    else:
+                        print("** instance id missing **")
+                else:
+                    print("** class doesn't exist **")
+            except Exception:
+                print("*** Unknown syntax: {}".format(line))    
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
