@@ -296,33 +296,83 @@ class HBNBCommand(cmd.Cmd):
             except Exception:
                 print("*** Unknown syntax: {}".format(line))
 
+        # elif '.' in line and '.update(' in line and line.endswith(')'):
+        #     try:
+        #         # Split into parts
+        #         class_part, id_part = line.split('.update(')
+        #         class_name = class_part.strip()
+        #         id_value = id_part[:-3].strip()  # Remove trailing )
+        #         attribute_name = id_part[:-2].strip()
+        #         attribute_value = id_part[:-1].strip()
+                
+        #         # Remove surrounding quotes if present
+        #         id_value = id_value.strip('"\'')
+                
+        #         if class_name in self.valid_classes:
+        #             if not id_value:
+        #                 # return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
+        #                 print("** instance id missing **")
+        #             elif not attribute_name:
+        #                 print("** attribute name missing **")
+        #             elif not attribute_value:
+        #                 print("** value missing **")
+        #             else:
+        #                 return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
+        #                 # print("** instance id missing **")
+        #         else:
+        #             print("** class doesn't exist **")
+        #     except Exception:
+        #         print("*** Unknown syntax: {}".format(line))  
+
         elif '.' in line and '.update(' in line and line.endswith(')'):
             try:
-                # Split into parts
-                class_part, id_part = line.split('.update(')
-                class_name = class_part.strip()
-                id_value = id_part[:-3].strip()  # Remove trailing )
-                attribute_name = id_part[:-2].strip()
-                attribute_value = id_part[:-1].strip()
+                # Extract the parts between parentheses
+                params_str = line.split('.update(')[1][:-1]
+                # Use shlex to handle quoted strings
+                params = [p.strip('"\'') for p in shlex.split(params_str.replace(',', ' '))]
                 
-                # Remove surrounding quotes if present
-                id_value = id_value.strip('"\'')
+                if len(params) < 3:
+                    print("*** Not enough arguments ***")
+                    return
+                    
+                class_name = line.split('.')[0]
+                instance_id = params[0]
+                attr_name = params[1]
+                attr_value = params[2]
                 
-                if class_name in self.valid_classes:
-                    if not id_value:
-                        # return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
-                        print("** instance id missing **")
-                    elif not attribute_name:
-                        print("** attribute name missing **")
-                    elif not attribute_value:
-                        print("** value missing **")
-                    else:
-                        return self.do_update(f"{class_name} {id_value} {attribute_name} {attribute_value}")
-                        # print("** instance id missing **")
-                else:
+                # Validate class
+                if class_name not in self.valid_classes:
                     print("** class doesn't exist **")
-            except Exception:
-                print("*** Unknown syntax: {}".format(line))  
+                    return
+                    
+                # Validate instance exists
+                storage = FileStorage()
+                key = f"{class_name}.{instance_id}"
+                if key not in storage.all():
+                    print("** no instance found **")
+                    return
+                    
+                # Protected attributes check
+                if attr_name in ['id', 'created_at', 'updated_at']:
+                    print("** cannot update protected attribute **")
+                    return
+                    
+                # Type conversion
+                try:
+                    attr_value = int(attr_value)
+                except ValueError:
+                    try:
+                        attr_value = float(attr_value)
+                    except ValueError:
+                        pass  # Keep as string
+                        
+                # Perform update
+                instance = storage.all()[key]
+                setattr(instance, attr_name, attr_value)
+                instance.save()
+                
+            except Exception as e:
+                print("*** Unknown syntax: {} ***".format(line))
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
