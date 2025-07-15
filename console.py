@@ -377,9 +377,9 @@ class HBNBCommand(cmd.Cmd):
 
         elif '.' in line and '.update(' in line and line.endswith(')'):
             try:
-                # Extract class name and parameters
+                # Parse the command structure
                 class_name = line.split('.')[0]
-                params_str = line.split('.update(')[1][:-1]  # Remove trailing )
+                params_str = line.split('(', 1)[1][:-1]  # Get content inside parentheses
                 
                 # Split into ID and dictionary parts
                 parts = [p.strip() for p in params_str.split(',', 1)]
@@ -387,10 +387,16 @@ class HBNBCommand(cmd.Cmd):
                     print("** dictionary missing **")
                     return
                     
-                instance_id = parts[0].strip('"\'')
-                dict_str = parts[1].strip()
+                # Clean the instance ID (handle all quote cases)
+                instance_id = parts[0].strip(' "\'')
                 
-                # Convert dictionary string to actual dictionary
+                # Handle the dictionary string (may contain commas)
+                dict_str = parts[1].strip()
+                if not dict_str.startswith('{') or not dict_str.endswith('}'):
+                    print("** invalid dictionary **")
+                    return
+                    
+                # Safely evaluate the dictionary
                 try:
                     update_dict = eval(dict_str)
                     if not isinstance(update_dict, dict):
@@ -421,7 +427,7 @@ class HBNBCommand(cmd.Cmd):
                         
                     # Convert string numbers to proper types
                     if isinstance(attr_value, str):
-                        stripped = attr_value.strip('"\'')
+                        stripped = attr_value.strip(' "\'')
                         try:
                             attr_value = int(stripped)
                         except ValueError:
@@ -432,9 +438,9 @@ class HBNBCommand(cmd.Cmd):
                     
                     setattr(instance, attr_name, attr_value)
                 
-                # Force save all changes
+                # Force update timestamp and save
                 instance.updated_at = datetime.now()
-                storage.save()  # Explicit save to ensure persistence
+                instance.save()  # This calls storage.save()
                 
             except Exception as e:
                 print("*** Unknown syntax: {} ***".format(line))
