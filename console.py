@@ -377,31 +377,30 @@ class HBNBCommand(cmd.Cmd):
 
         elif '.' in line and '.update(' in line and line.endswith(')'):
             try:
-                # Extract the parts between parentheses
-                parts = line.split('.update(')
-                class_name = parts[0].strip()
-                params_str = parts[1][:-1].strip()  # Remove trailing )
+                # Extract class name and parameters
+                class_name = line.split('.')[0]
+                params_str = line.split('.update(')[1][:-1]  # Remove trailing )
                 
                 # Split into ID and dictionary parts
-                first_comma = params_str.find(',')
-                if first_comma == -1:
-                    print("*** Missing dictionary argument ***")
+                parts = [p.strip() for p in params_str.split(',', 1)]
+                if len(parts) < 2:
+                    print("** dictionary missing **")
                     return
                     
-                instance_id = params_str[:first_comma].strip(' "\'')
-                dict_str = params_str[first_comma+1:].strip()
+                instance_id = parts[0].strip('"\'')
+                dict_str = parts[1].strip()
                 
                 # Convert dictionary string to actual dictionary
                 try:
                     update_dict = eval(dict_str)
                     if not isinstance(update_dict, dict):
-                        print("*** Argument must be a dictionary ***")
+                        print("** argument must be a dictionary **")
                         return
                 except:
-                    print("*** Invalid dictionary format ***")
+                    print("** invalid dictionary **")
                     return
                     
-                # Validate class
+                # Validate class exists
                 if class_name not in self.valid_classes:
                     print("** class doesn't exist **")
                     return
@@ -414,29 +413,28 @@ class HBNBCommand(cmd.Cmd):
                     print("** no instance found **")
                     return
                     
-                # Get instance and update attributes
+                # Update instance attributes
                 instance = all_objs[key]
                 for attr_name, attr_value in update_dict.items():
                     if attr_name in ['id', 'created_at', 'updated_at']:
-                        print(f"** cannot update protected attribute: {attr_name} **")
-                        continue
+                        continue  # Skip protected attributes
                         
                     # Convert string numbers to proper types
                     if isinstance(attr_value, str):
-                        attr_value = attr_value.strip('"\'')
+                        stripped = attr_value.strip('"\'')
                         try:
-                            attr_value = int(attr_value)
+                            attr_value = int(stripped)
                         except ValueError:
                             try:
-                                attr_value = float(attr_value)
+                                attr_value = float(stripped)
                             except ValueError:
-                                pass  # Keep as string
+                                attr_value = stripped
                     
                     setattr(instance, attr_name, attr_value)
                 
-                # Force save the changes
+                # Force save all changes
                 instance.updated_at = datetime.now()
-                storage.save()  # Explicitly save to file
+                storage.save()  # Explicit save to ensure persistence
                 
             except Exception as e:
                 print("*** Unknown syntax: {} ***".format(line))
