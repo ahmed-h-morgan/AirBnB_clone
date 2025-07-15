@@ -12,6 +12,7 @@ from models.review import Review
 from models.state import State
 from models.engine.file_storage import FileStorage
 import shlex
+from datetime import datetime
 
 
 
@@ -408,23 +409,34 @@ class HBNBCommand(cmd.Cmd):
                 # Validate instance exists
                 storage = FileStorage()
                 key = f"{class_name}.{instance_id}"
-                if key not in storage.all():
+                all_objs = storage.all()
+                if key not in all_objs:
                     print("** no instance found **")
                     return
                     
                 # Get instance and update attributes
-                instance = storage.all()[key]
+                instance = all_objs[key]
                 for attr_name, attr_value in update_dict.items():
                     if attr_name in ['id', 'created_at', 'updated_at']:
                         print(f"** cannot update protected attribute: {attr_name} **")
                         continue
                         
-                    # Type conversion for each attribute
+                    # Convert string numbers to proper types
                     if isinstance(attr_value, str):
                         attr_value = attr_value.strip('"\'')
-                    setattr(instance, attr_name, attr_value)
+                        try:
+                            attr_value = int(attr_value)
+                        except ValueError:
+                            try:
+                                attr_value = float(attr_value)
+                            except ValueError:
+                                pass  # Keep as string
                     
-                instance.save()
+                    setattr(instance, attr_name, attr_value)
+                
+                # Force save the changes
+                instance.updated_at = datetime.now()
+                storage.save()  # Explicitly save to file
                 
             except Exception as e:
                 print("*** Unknown syntax: {} ***".format(line))
