@@ -374,5 +374,60 @@ class HBNBCommand(cmd.Cmd):
             except Exception as e:
                 print("*** Unknown syntax: {} ***".format(line))
 
+        elif '.' in line and '.update(' in line and line.endswith(')'):
+            try:
+                # Extract the parts between parentheses
+                parts = line.split('.update(')
+                class_name = parts[0].strip()
+                params_str = parts[1][:-1].strip()  # Remove trailing )
+                
+                # Split into ID and dictionary parts
+                first_comma = params_str.find(',')
+                if first_comma == -1:
+                    print("*** Missing dictionary argument ***")
+                    return
+                    
+                instance_id = params_str[:first_comma].strip(' "\'')
+                dict_str = params_str[first_comma+1:].strip()
+                
+                # Convert dictionary string to actual dictionary
+                try:
+                    update_dict = eval(dict_str)
+                    if not isinstance(update_dict, dict):
+                        print("*** Argument must be a dictionary ***")
+                        return
+                except:
+                    print("*** Invalid dictionary format ***")
+                    return
+                    
+                # Validate class
+                if class_name not in self.valid_classes:
+                    print("** class doesn't exist **")
+                    return
+                    
+                # Validate instance exists
+                storage = FileStorage()
+                key = f"{class_name}.{instance_id}"
+                if key not in storage.all():
+                    print("** no instance found **")
+                    return
+                    
+                # Get instance and update attributes
+                instance = storage.all()[key]
+                for attr_name, attr_value in update_dict.items():
+                    if attr_name in ['id', 'created_at', 'updated_at']:
+                        print(f"** cannot update protected attribute: {attr_name} **")
+                        continue
+                        
+                    # Type conversion for each attribute
+                    if isinstance(attr_value, str):
+                        attr_value = attr_value.strip('"\'')
+                    setattr(instance, attr_name, attr_value)
+                    
+                instance.save()
+                
+            except Exception as e:
+                print("*** Unknown syntax: {} ***".format(line))
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
